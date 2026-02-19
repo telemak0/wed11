@@ -1,15 +1,15 @@
-import { 
-  collection, 
-  addDoc, 
-  getDocs, 
-  deleteDoc, 
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
   updateDoc,
   doc,
   getDoc,
-  query, 
+  query,
   orderBy,
   where,
-  serverTimestamp 
+  serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Player } from '../types';
@@ -22,7 +22,7 @@ export const playerService = {
   async getPlayers(): Promise<Player[]> {
     const q = query(collection(db, PLAYERS_COLLECTION), orderBy('name'));
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => {
+    return snapshot.docs.map((doc) => {
       const data = doc.data();
       return {
         id: doc.id,
@@ -30,7 +30,7 @@ export const playerService = {
         type: data.type || 'active', // Default to 'active' for existing players
         loginCode: data.loginCode || '',
         nickname: data.nickname || null,
-        createdAt: data.createdAt
+        createdAt: data.createdAt,
       } as Player;
     });
   },
@@ -38,7 +38,9 @@ export const playerService = {
   async getPlayerById(id: string): Promise<Player | null> {
     const docRef = doc(db, PLAYERS_COLLECTION, id);
     const docSnapshot = await getDoc(docRef);
-    if (!docSnapshot.exists()) {return null;}
+    if (!docSnapshot.exists()) {
+      return null;
+    }
     const data = docSnapshot.data();
     return {
       id: docSnapshot.id,
@@ -46,14 +48,19 @@ export const playerService = {
       type: data.type || 'active',
       loginCode: data.loginCode || '',
       nickname: data.nickname || null,
-      createdAt: data.createdAt
+      createdAt: data.createdAt,
     } as Player;
   },
 
-  async updatePlayer(id: string, name: string, type: 'active' | 'occasional', loginCode?: string): Promise<void> {
+  async updatePlayer(
+    id: string,
+    name: string,
+    type: 'active' | 'occasional',
+    loginCode?: string
+  ): Promise<void> {
     const docRef = doc(db, PLAYERS_COLLECTION, id);
     const currentPlayer = await this.getPlayerById(id);
-    
+
     const updateData: any = { name, type };
     if (loginCode) {
       updateData.loginCode = loginCode;
@@ -92,7 +99,7 @@ export const playerService = {
       type,
       loginCode: code,
       nickname,
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
     });
 
     // Update in-memory service with actual ID
@@ -109,10 +116,7 @@ export const playerService = {
   },
 
   async getPlayerByCode(code: string): Promise<Player | null> {
-    const q = query(
-      collection(db, PLAYERS_COLLECTION),
-      where('loginCode', '==', code)
-    );
+    const q = query(collection(db, PLAYERS_COLLECTION), where('loginCode', '==', code));
     const snapshot = await getDocs(q);
     if (snapshot.empty) return null;
 
@@ -124,7 +128,7 @@ export const playerService = {
       type: data.type || 'active',
       loginCode: data.loginCode || '',
       nickname: data.nickname || null,
-      createdAt: data.createdAt
+      createdAt: data.createdAt,
     } as Player;
   },
 
@@ -137,5 +141,5 @@ export const playerService = {
     const docRef = doc(db, PLAYERS_COLLECTION, id);
     await updateDoc(docRef, { loginCode: newCode });
     return newCode;
-  }
+  },
 };

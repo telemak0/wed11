@@ -37,9 +37,7 @@ export const GlobalRankingTable: React.FC<GlobalRankingTableProps> = ({
       if (sortColumn === 'playerId' || sortColumn === 'playerName') {
         const aStr = (aValue as string).toLowerCase();
         const bStr = (bValue as string).toLowerCase();
-        return sortDirection === 'asc' 
-          ? aStr.localeCompare(bStr) 
-          : bStr.localeCompare(aStr);
+        return sortDirection === 'asc' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
       }
 
       const aNum = typeof aValue === 'number' ? aValue : 0;
@@ -67,9 +65,7 @@ export const GlobalRankingTable: React.FC<GlobalRankingTableProps> = ({
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       {sortedStats.length === 0 ? (
-        <div className="p-8 text-center text-gray-500">
-          No rankings available
-        </div>
+        <div className="p-8 text-center text-gray-500">No rankings available</div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -139,16 +135,17 @@ export const GlobalRankingTable: React.FC<GlobalRankingTableProps> = ({
                   className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
                   onClick={() => handleSort('goalsAgainstPerGame')}
                 >
-                  {t('playerStats.goalsAgainstPerGame')} <SortIndicator column="goalsAgainstPerGame" />
+                  {t('playerStats.goalsAgainstPerGame')}{' '}
+                  <SortIndicator column="goalsAgainstPerGame" />
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {sortedStats.map((stat) => {
                 const isLoggedInPlayer = stat.playerId === playerId;
-                const displayName = isLoggedInPlayer 
-                  ? stat.playerName 
-                  : (nicknameMap.get(stat.playerId) || stat.playerName);
+                const displayName = isLoggedInPlayer
+                  ? stat.playerName
+                  : nicknameMap.get(stat.playerId) || stat.playerName;
 
                 return (
                   <tr
@@ -158,7 +155,9 @@ export const GlobalRankingTable: React.FC<GlobalRankingTableProps> = ({
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {displayName}
                       {isLoggedInPlayer && nicknameMap.get(stat.playerId) && (
-                        <span className="ml-2 text-xs text-indigo-600 font-semibold">({nicknameMap.get(stat.playerId)})</span>
+                        <span className="ml-2 text-xs text-indigo-600 font-semibold">
+                          ({nicknameMap.get(stat.playerId)})
+                        </span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">

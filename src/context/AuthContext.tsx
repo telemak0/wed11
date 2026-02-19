@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await adminService.logout();
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error('Logout failed:', error);
     } finally {
       localStorage.removeItem('wed11_last_login');
       setIsAuthenticated(false);

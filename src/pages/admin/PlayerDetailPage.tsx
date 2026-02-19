@@ -11,14 +11,14 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
 import {
   PlayerTeammateStats,
   PlayerOpponentStats,
   PlayerTeamDistribution,
   PlayerResultDistribution,
-  Player
+  Player,
 } from '../../types';
 import { playerDetailService } from '../../services/playerDetailService';
 import { playerService } from '../../services/playerService';
@@ -36,7 +36,8 @@ const TeamDistributionLabel = (props: {
   value?: number;
 }) => {
   const RADIAN = Math.PI / 180;
-  const radius = (props.innerRadius ?? 0) + ((props.outerRadius ?? 0) - (props.innerRadius ?? 0)) * 1.2;
+  const radius =
+    (props.innerRadius ?? 0) + ((props.outerRadius ?? 0) - (props.innerRadius ?? 0)) * 1.2;
   const x = (props.cx ?? 0) + radius * Math.cos(-((props.midAngle ?? 0) * RADIAN));
   const y = (props.cy ?? 0) + radius * Math.sin(-((props.midAngle ?? 0) * RADIAN));
 
@@ -63,17 +64,23 @@ export const PlayerDetailPage = () => {
   const [teammates, setTeammates] = useState<PlayerTeammateStats[]>([]);
   const [opponents, setOpponents] = useState<PlayerOpponentStats[]>([]);
   const [teamDistribution, setTeamDistribution] = useState<PlayerTeamDistribution | null>(null);
-  const [resultDistribution, setResultDistribution] = useState<PlayerResultDistribution | null>(null);
+  const [resultDistribution, setResultDistribution] = useState<PlayerResultDistribution | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!playerId) {return;}
+    if (!playerId) {
+      return;
+    }
     loadPlayerDetail();
   }, [playerId]);
 
   const loadPlayerDetail = async () => {
-    if (!playerId) {return;}
+    if (!playerId) {
+      return;
+    }
 
     setLoading(true);
     setError('');
@@ -92,7 +99,7 @@ export const PlayerDetailPage = () => {
         playerDetailService.getTopTeammates(playerId),
         playerDetailService.getTopOpponents(playerId),
         playerDetailService.getTeamDistribution(playerId),
-        playerDetailService.getResultDistribution(playerId)
+        playerDetailService.getResultDistribution(playerId),
       ]);
 
       setTeammates(tm);
@@ -138,31 +145,31 @@ export const PlayerDetailPage = () => {
   // Prepare data for pie charts
   const teamData = [
     { name: 'White', value: teamDistribution?.white ?? 0 },
-    { name: 'Red', value: teamDistribution?.red ?? 0 }
+    { name: 'Red', value: teamDistribution?.red ?? 0 },
   ];
 
   const resultData = [
     { name: 'Wins', value: resultDistribution?.wins ?? 0 },
     { name: 'Draws', value: resultDistribution?.draws ?? 0 },
-    { name: 'Losses', value: resultDistribution?.losses ?? 0 }
+    { name: 'Losses', value: resultDistribution?.losses ?? 0 },
   ];
 
   // Calculate percentages for teammates and opponents
   const teammatesTotals = teammates.reduce((sum, t) => sum + t.gamesPlayed, 0) || 1;
   const opponentsTotals = opponents.reduce((sum, o) => sum + o.gamesPlayed, 0) || 1;
 
-  const teammatesData = teammates.map(t => ({
+  const teammatesData = teammates.map((t) => ({
     name: t.playerName,
     games: t.gamesPlayed,
     winrate: t.winrate,
-    percentage: Math.round((t.gamesPlayed / teammatesTotals) * 100)
+    percentage: Math.round((t.gamesPlayed / teammatesTotals) * 100),
   }));
 
-  const opponentsData = opponents.map(o => ({
+  const opponentsData = opponents.map((o) => ({
     name: o.playerName,
     games: o.gamesPlayed,
     winrate: o.winrate,
-    percentage: Math.round((o.gamesPlayed / opponentsTotals) * 100)
+    percentage: Math.round((o.gamesPlayed / opponentsTotals) * 100),
   }));
 
   return (
@@ -188,7 +195,9 @@ export const PlayerDetailPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         {/* Team Distribution */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('playerDetail.teamDistribution')}</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            {t('playerDetail.teamDistribution')}
+          </h2>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -211,7 +220,9 @@ export const PlayerDetailPage = () => {
 
         {/* Results Distribution */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('playerDetail.resultsDistribution')}</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            {t('playerDetail.resultsDistribution')}
+          </h2>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -238,7 +249,9 @@ export const PlayerDetailPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Top Teammates */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('playerDetail.topTeammates')}</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            {t('playerDetail.topTeammates')}
+          </h2>
           {teammates.length === 0 ? (
             <p className="text-gray-500">{t('playerDetail.noTeammatesFound')}</p>
           ) : (
@@ -252,10 +265,14 @@ export const PlayerDetailPage = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis type="number" domain={[0, totalGames]} />
                   <YAxis dataKey="name" type="category" width={100} />
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value, name) => {
-                      if (name === 'games') {return [`${value} games`, 'Games'];}
-                      if (name === 'percentage') {return [`${value}%`, 'Percentage'];}
+                      if (name === 'games') {
+                        return [`${value} games`, 'Games'];
+                      }
+                      if (name === 'percentage') {
+                        return [`${value}%`, 'Percentage'];
+                      }
                       return [value, name];
                     }}
                   />
@@ -263,10 +280,12 @@ export const PlayerDetailPage = () => {
                 </BarChart>
               </ResponsiveContainer>
               <div className="mt-4 text-sm text-gray-600">
-                {teammates.map(t => (
+                {teammates.map((t) => (
                   <div key={t.playerId} className="flex justify-between">
                     <span>{t.playerName}</span>
-                    <span className="font-medium">{t.gamesPlayed} games - {t.winrate}% winrate</span>
+                    <span className="font-medium">
+                      {t.gamesPlayed} games - {t.winrate}% winrate
+                    </span>
                   </div>
                 ))}
               </div>
@@ -276,7 +295,9 @@ export const PlayerDetailPage = () => {
 
         {/* Top Opponents */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('playerDetail.topOpponents')}</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            {t('playerDetail.topOpponents')}
+          </h2>
           {opponents.length === 0 ? (
             <p className="text-gray-500">{t('playerDetail.noOpponentsFound')}</p>
           ) : (
@@ -290,10 +311,14 @@ export const PlayerDetailPage = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis type="number" domain={[0, totalGames]} />
                   <YAxis dataKey="name" type="category" width={100} />
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value, name) => {
-                      if (name === 'games') {return [`${value} games`, 'Games'];}
-                      if (name === 'percentage') {return [`${value}%`, 'Percentage'];}
+                      if (name === 'games') {
+                        return [`${value} games`, 'Games'];
+                      }
+                      if (name === 'percentage') {
+                        return [`${value}%`, 'Percentage'];
+                      }
                       return [value, name];
                     }}
                   />
@@ -301,10 +326,12 @@ export const PlayerDetailPage = () => {
                 </BarChart>
               </ResponsiveContainer>
               <div className="mt-4 text-sm text-gray-600">
-                {opponents.map(o => (
+                {opponents.map((o) => (
                   <div key={o.playerId} className="flex justify-between">
                     <span>{o.playerName}</span>
-                    <span className="font-medium">{o.gamesPlayed} games - {o.winrate}% winrate</span>
+                    <span className="font-medium">
+                      {o.gamesPlayed} games - {o.winrate}% winrate
+                    </span>
                   </div>
                 ))}
               </div>

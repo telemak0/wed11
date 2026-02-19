@@ -3,7 +3,7 @@ import {
   PlayerOpponentStats,
   PlayerTeamDistribution,
   PlayerResultDistribution,
-  Match
+  Match,
 } from '../types';
 import { matchService } from './matchService';
 import { playerService } from './playerService';
@@ -12,12 +12,16 @@ import { playerService } from './playerService';
  * Calculate winrate percentage for a player with a teammate
  * Winrate = (wins together / total games together) * 100
  */
-const calculateTeammateWinrate = (matches: Match[], playerId: string, teammateId: string): number => {
+const calculateTeammateWinrate = (
+  matches: Match[],
+  playerId: string,
+  teammateId: string
+): number => {
   const teammatches = matches.filter(
-    match =>
+    (match) =>
       match.status === 'completed' &&
       ((match.teamWhite.includes(playerId) && match.teamWhite.includes(teammateId)) ||
-       (match.teamRed.includes(playerId) && match.teamRed.includes(teammateId)))
+        (match.teamRed.includes(playerId) && match.teamRed.includes(teammateId)))
   );
 
   if (teammatches.length === 0) {
@@ -29,13 +33,13 @@ const calculateTeammateWinrate = (matches: Match[], playerId: string, teammateId
     if (!match.result) {
       continue;
     }
-    
+
     const { goalsWhite, goalsRed } = match.result;
     const playerInWhite = match.teamWhite.includes(playerId);
-    
+
     const goalsFor = playerInWhite ? goalsWhite : goalsRed;
     const goalsAgainst = playerInWhite ? goalsRed : goalsWhite;
-    
+
     if (goalsFor > goalsAgainst) {
       wins += 1;
     }
@@ -48,12 +52,16 @@ const calculateTeammateWinrate = (matches: Match[], playerId: string, teammateId
  * Calculate winrate percentage for a player against an opponent
  * Winrate = (wins against opponent / total games against opponent) * 100
  */
-const calculateOpponentWinrate = (matches: Match[], playerId: string, opponentId: string): number => {
+const calculateOpponentWinrate = (
+  matches: Match[],
+  playerId: string,
+  opponentId: string
+): number => {
   const opponentMatches = matches.filter(
-    match =>
+    (match) =>
       match.status === 'completed' &&
       ((match.teamWhite.includes(playerId) && match.teamRed.includes(opponentId)) ||
-       (match.teamRed.includes(playerId) && match.teamWhite.includes(opponentId)))
+        (match.teamRed.includes(playerId) && match.teamWhite.includes(opponentId)))
   );
 
   if (opponentMatches.length === 0) {
@@ -65,13 +73,13 @@ const calculateOpponentWinrate = (matches: Match[], playerId: string, opponentId
     if (!match.result) {
       continue;
     }
-    
+
     const { goalsWhite, goalsRed } = match.result;
     const playerInWhite = match.teamWhite.includes(playerId);
-    
+
     const goalsFor = playerInWhite ? goalsWhite : goalsRed;
     const goalsAgainst = playerInWhite ? goalsRed : goalsWhite;
-    
+
     if (goalsFor > goalsAgainst) {
       wins += 1;
     }
@@ -86,21 +94,21 @@ export const playerDetailService = {
    */
   async getTopTeammates(playerId: string, limit: number = 10): Promise<PlayerTeammateStats[]> {
     const allMatches = await matchService.getAllMatches();
-    
+
     // Filter completed matches where player participated
     const playerMatches = allMatches.filter(
-      match =>
+      (match) =>
         match.status === 'completed' &&
         (match.teamWhite.includes(playerId) || match.teamRed.includes(playerId))
     );
 
     // Count teammates
     const teammates = new Map<string, number>();
-    
+
     for (const match of playerMatches) {
       const playerInWhite = match.teamWhite.includes(playerId);
       const teamPlayers = playerInWhite ? match.teamWhite : match.teamRed;
-      
+
       // Add other players in the same team
       for (const teammate of teamPlayers) {
         if (teammate !== playerId) {
@@ -117,13 +125,13 @@ export const playerDetailService = {
 
     // Fetch player names
     const allPlayers = await playerService.getPlayers();
-    const playerMap = new Map(allPlayers.map(p => [p.id, p]));
+    const playerMap = new Map(allPlayers.map((p) => [p.id, p]));
 
-    return sortedTeammates.map(tm => ({
+    return sortedTeammates.map((tm) => ({
       playerId: tm.playerId,
       playerName: playerMap.get(tm.playerId)?.name || 'Unknown Player',
       gamesPlayed: tm.gamesPlayed,
-      winrate: calculateTeammateWinrate(allMatches, playerId, tm.playerId)
+      winrate: calculateTeammateWinrate(allMatches, playerId, tm.playerId),
     }));
   },
 
@@ -132,21 +140,21 @@ export const playerDetailService = {
    */
   async getTopOpponents(playerId: string, limit: number = 10): Promise<PlayerOpponentStats[]> {
     const allMatches = await matchService.getAllMatches();
-    
+
     // Filter completed matches where player participated
     const playerMatches = allMatches.filter(
-      match =>
+      (match) =>
         match.status === 'completed' &&
         (match.teamWhite.includes(playerId) || match.teamRed.includes(playerId))
     );
 
     // Count opponents
     const opponents = new Map<string, number>();
-    
+
     for (const match of playerMatches) {
       const playerInWhite = match.teamWhite.includes(playerId);
       const opposingTeam = playerInWhite ? match.teamRed : match.teamWhite;
-      
+
       // Add players in the opposite team
       for (const opponent of opposingTeam) {
         opponents.set(opponent, (opponents.get(opponent) || 0) + 1);
@@ -161,13 +169,13 @@ export const playerDetailService = {
 
     // Fetch player names
     const allPlayers = await playerService.getPlayers();
-    const playerMap = new Map(allPlayers.map(p => [p.id, p]));
+    const playerMap = new Map(allPlayers.map((p) => [p.id, p]));
 
-    return sortedOpponents.map(op => ({
+    return sortedOpponents.map((op) => ({
       playerId: op.playerId,
       playerName: playerMap.get(op.playerId)?.name || 'Unknown Player',
       gamesPlayed: op.gamesPlayed,
-      winrate: calculateOpponentWinrate(allMatches, playerId, op.playerId)
+      winrate: calculateOpponentWinrate(allMatches, playerId, op.playerId),
     }));
   },
 
@@ -176,10 +184,10 @@ export const playerDetailService = {
    */
   async getTeamDistribution(playerId: string): Promise<PlayerTeamDistribution> {
     const allMatches = await matchService.getAllMatches();
-    
+
     // Filter completed matches where player participated
     const playerMatches = allMatches.filter(
-      match =>
+      (match) =>
         match.status === 'completed' &&
         (match.teamWhite.includes(playerId) || match.teamRed.includes(playerId))
     );
@@ -203,10 +211,10 @@ export const playerDetailService = {
    */
   async getResultDistribution(playerId: string): Promise<PlayerResultDistribution> {
     const allMatches = await matchService.getAllMatches();
-    
+
     // Filter completed matches where player participated
     const playerMatches = allMatches.filter(
-      match =>
+      (match) =>
         match.status === 'completed' &&
         (match.teamWhite.includes(playerId) || match.teamRed.includes(playerId))
     );
@@ -216,7 +224,9 @@ export const playerDetailService = {
     let losses = 0;
 
     for (const match of playerMatches) {
-      if (!match.result) {continue;} // Skip if no result recorded
+      if (!match.result) {
+        continue;
+      } // Skip if no result recorded
 
       const { goalsWhite, goalsRed } = match.result;
       const playerInWhite = match.teamWhite.includes(playerId);
@@ -234,5 +244,5 @@ export const playerDetailService = {
     }
 
     return { wins, draws, losses };
-  }
+  },
 };

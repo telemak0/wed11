@@ -1,4 +1,12 @@
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode, useRef } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+  useRef,
+} from 'react';
 
 interface PlayerAuthContextType {
   isAuthenticated: boolean;
@@ -63,10 +71,7 @@ export const PlayerAuthProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(true);
     setPlayerId(pid);
     setPlayerName(name);
-    localStorage.setItem(
-      SESSION_STORAGE_KEY,
-      JSON.stringify({ pid, name, timestamp: Date.now() })
-    );
+    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ pid, name, timestamp: Date.now() }));
     resetInactivityTimer();
   };
 
@@ -90,12 +95,12 @@ export const PlayerAuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const events = ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'];
-    events.forEach(event => {
+    events.forEach((event) => {
       document.addEventListener(event, handleActivity);
     });
 
     return () => {
-      events.forEach(event => {
+      events.forEach((event) => {
         document.removeEventListener(event, handleActivity);
       });
     };

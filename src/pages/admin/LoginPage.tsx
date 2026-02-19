@@ -37,7 +37,7 @@ export const LoginPage = () => {
       await setupAdmin(password);
       navigate('/admin/dashboard');
     } catch (err: any) {
-      setError(err.message || "Setup failed");
+      setError(err.message || 'Setup failed');
       setIsLoading(false);
     }
   };
@@ -58,15 +58,13 @@ export const LoginPage = () => {
             {isBootstrapped ? t('login.heading') : t('login.setupHeading')}
           </h2>
           {!isBootstrapped && (
-            <p className="mt-2 text-center text-sm text-gray-600">
-              {t('login.setupDesc')}
-            </p>
+            <p className="mt-2 text-center text-sm text-gray-600">{t('login.setupDesc')}</p>
           )}
         </div>
         <form className="mt-8 space-y-6" onSubmit={isBootstrapped ? handleLogin : handleSetup}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="password" className={isBootstrapped ? "" : "sr-only"}>
+              <label htmlFor="password" className={isBootstrapped ? '' : 'sr-only'}>
                 {t('login.passwordLabel')}
               </label>
               <input
@@ -75,7 +73,9 @@ export const LoginPage = () => {
                 type="password"
                 required
                 className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 ${isBootstrapped ? 'rounded-md' : 'rounded-t-md'} focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                placeholder={isBootstrapped ? t('login.passwordPlaceholder') : t('login.passwordLabel')}
+                placeholder={
+                  isBootstrapped ? t('login.passwordPlaceholder') : t('login.passwordLabel')
+                }
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -99,11 +99,7 @@ export const LoginPage = () => {
             )}
           </div>
 
-          {error && (
-            <div className="text-red-500 text-sm text-center">
-              {error}
-            </div>
-          )}
+          {error && <div className="text-red-500 text-sm text-center">{error}</div>}
 
           <div>
             <button
@@ -113,7 +109,11 @@ export const LoginPage = () => {
                 isLoading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'
               } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
             >
-              {isLoading ? t('landing.loading') : (isBootstrapped ? t('login.signInBtn') : t('login.setupBtn'))}
+              {isLoading
+                ? t('landing.loading')
+                : isBootstrapped
+                  ? t('login.signInBtn')
+                  : t('login.setupBtn')}
             </button>
           </div>
         </form>

@@ -45,7 +45,7 @@ export const PlayerLoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow">
         <h1 className="text-2xl font-bold mb-6 text-center">{t('playerLogin.heading')}</h1>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-2">
@@ -66,11 +66,7 @@ export const PlayerLoginPage = () => {
             />
           </div>
 
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
-              {error}
-            </div>
-          )}
+          {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">{error}</div>}
 
           <button
             type="submit"
@@ -81,9 +77,7 @@ export const PlayerLoginPage = () => {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-600">
-          {t('playerLogin.instruction')}
-        </p>
+        <p className="mt-6 text-center text-sm text-gray-600">{t('playerLogin.instruction')}</p>
       </div>
     </div>
   );

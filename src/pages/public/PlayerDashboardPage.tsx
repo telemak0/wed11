@@ -1,15 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { usePlayerAuth } from '../../context/PlayerAuthContext';
 import { playerStatsService } from '../../services/playerStatsService';
 import { playerDetailService } from '../../services/playerDetailService';
@@ -26,7 +18,7 @@ export const PlayerDashboardPage = () => {
   const [opponents, setOpponents] = useState<PlayerOpponentStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   // Global ranking state
   const [allStats, setAllStats] = useState<PlayerStats[]>([]);
   const [nicknameMap, setNicknameMap] = useState<Map<string, string>>(new Map());
@@ -47,7 +39,7 @@ export const PlayerDashboardPage = () => {
 
         const [tm, op] = await Promise.all([
           playerDetailService.getTopTeammates(playerId),
-          playerDetailService.getTopOpponents(playerId)
+          playerDetailService.getTopOpponents(playerId),
         ]);
         setTeammates(tm);
         setOpponents(op);
@@ -55,7 +47,7 @@ export const PlayerDashboardPage = () => {
         // Load global ranking stats (ACTIVE players only) and their nicknames from Firestore
         const rankingStats = await playerStatsService.getPlayerStats(false);
         setAllStats(rankingStats);
-        
+
         // Load all players to get their nicknames from Firestore
         const allPlayers = await playerService.getPlayers();
         const nickMap = new Map<string, string>();
@@ -94,9 +86,7 @@ export const PlayerDashboardPage = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold">
-              {t('playerDashboard.title', { playerName })}
-            </h1>
+            <h1 className="text-3xl font-bold">{t('playerDashboard.title', { playerName })}</h1>
             <p className="text-gray-600">{t('playerDashboard.statsSubtitle')}</p>
           </div>
           <button
@@ -107,11 +97,7 @@ export const PlayerDashboardPage = () => {
           </button>
         </div>
 
-        {error && (
-          <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">
-            {error}
-          </div>
-        )}
+        {error && <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">{error}</div>}
 
         {loading ? (
           <div className="text-center py-12 bg-white rounded-lg shadow">
@@ -122,7 +108,9 @@ export const PlayerDashboardPage = () => {
             {/* Main Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               <div className="bg-blue-50 p-4 rounded">
-                <p className="text-gray-600 text-sm font-medium">{t('playerDashboard.matchesPlayed')}</p>
+                <p className="text-gray-600 text-sm font-medium">
+                  {t('playerDashboard.matchesPlayed')}
+                </p>
                 <p className="text-3xl font-bold text-blue-600">{stats.matchesPlayed}</p>
               </div>
               <div className="bg-green-50 p-4 rounded">
@@ -144,28 +132,42 @@ export const PlayerDashboardPage = () => {
             {/* Secondary Stats */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className="p-4">
-                <p className="text-gray-600 text-sm font-medium mb-1">{t('playerDashboard.totalPoints')}</p>
+                <p className="text-gray-600 text-sm font-medium mb-1">
+                  {t('playerDashboard.totalPoints')}
+                </p>
                 <p className="text-2xl font-bold text-gray-900">{stats.totalPoints}</p>
               </div>
               <div className="p-4">
-                <p className="text-gray-600 text-sm font-medium mb-1">{t('playerDashboard.pointsPerGame')}</p>
+                <p className="text-gray-600 text-sm font-medium mb-1">
+                  {t('playerDashboard.pointsPerGame')}
+                </p>
                 <p className="text-2xl font-bold text-gray-900">{stats.pointsPerGame.toFixed(2)}</p>
               </div>
               <div className="p-4">
-                <p className="text-gray-600 text-sm font-medium mb-1">{t('playerDashboard.goalsScored')}</p>
+                <p className="text-gray-600 text-sm font-medium mb-1">
+                  {t('playerDashboard.goalsScored')}
+                </p>
                 <p className="text-2xl font-bold text-gray-900">{stats.totalGoalsScored}</p>
               </div>
               <div className="p-4">
-                <p className="text-gray-600 text-sm font-medium mb-1">{t('playerDashboard.goalsPerGame')}</p>
+                <p className="text-gray-600 text-sm font-medium mb-1">
+                  {t('playerDashboard.goalsPerGame')}
+                </p>
                 <p className="text-2xl font-bold text-gray-900">{stats.goalsPerGame.toFixed(2)}</p>
               </div>
               <div className="p-4">
-                <p className="text-gray-600 text-sm font-medium mb-1">{t('playerDashboard.goalsAgainst')}</p>
+                <p className="text-gray-600 text-sm font-medium mb-1">
+                  {t('playerDashboard.goalsAgainst')}
+                </p>
                 <p className="text-2xl font-bold text-gray-900">{stats.totalGoalsConceded}</p>
               </div>
               <div className="p-4">
-                <p className="text-gray-600 text-sm font-medium mb-1">{t('playerDashboard.goalsAgainstPerGame')}</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.goalsAgainstPerGame.toFixed(2)}</p>
+                <p className="text-gray-600 text-sm font-medium mb-1">
+                  {t('playerDashboard.goalsAgainstPerGame')}
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.goalsAgainstPerGame.toFixed(2)}
+                </p>
               </div>
             </div>
 
@@ -173,17 +175,19 @@ export const PlayerDashboardPage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
               {/* Top Teammates */}
               <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('playerDashboard.teammates')}</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  {t('playerDashboard.teammates')}
+                </h2>
                 {teammates.length === 0 ? (
                   <p className="text-gray-500">{t('playerDashboard.noTeammates')}</p>
                 ) : (
                   <div className="space-y-4">
                     <ResponsiveContainer width="100%" height={450}>
                       <BarChart
-                        data={teammates.map(t => ({
+                        data={teammates.map((t) => ({
                           name: t.playerName,
                           games: t.gamesPlayed,
-                          winrate: t.winrate
+                          winrate: t.winrate,
                         }))}
                         layout="vertical"
                         margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
@@ -191,10 +195,13 @@ export const PlayerDashboardPage = () => {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis type="number" />
                         <YAxis dataKey="name" type="category" width={100} />
-                        <Tooltip 
+                        <Tooltip
                           formatter={(value, name) => {
                             if (name === 'games') {
-                              return [`${value} ${t('playerDetail.games')}`, t('playerDashboard.gamesLabel')];
+                              return [
+                                `${value} ${t('playerDetail.games')}`,
+                                t('playerDashboard.gamesLabel'),
+                              ];
                             }
                             if (name === 'winrate') {
                               return [`${value}%`, t('playerDashboard.winrateLabel')];
@@ -206,11 +213,14 @@ export const PlayerDashboardPage = () => {
                       </BarChart>
                     </ResponsiveContainer>
                     <div className="mt-4 text-sm text-gray-600">
-                      {teammates.map(tm => (
+                      {teammates.map((tm) => (
                         <div key={tm.playerId} className="flex justify-between">
                           <span>{tm.playerName}</span>
                           <span className="font-medium">
-                            {t('playerDashboard.statsSummary', { count: tm.gamesPlayed, winrate: tm.winrate })}
+                            {t('playerDashboard.statsSummary', {
+                              count: tm.gamesPlayed,
+                              winrate: tm.winrate,
+                            })}
                           </span>
                         </div>
                       ))}
@@ -221,17 +231,19 @@ export const PlayerDashboardPage = () => {
 
               {/* Top Opponents */}
               <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('playerDashboard.opponents')}</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  {t('playerDashboard.opponents')}
+                </h2>
                 {opponents.length === 0 ? (
                   <p className="text-gray-500">{t('playerDashboard.noOpponents')}</p>
                 ) : (
                   <div className="space-y-4">
                     <ResponsiveContainer width="100%" height={450}>
                       <BarChart
-                        data={opponents.map(o => ({
+                        data={opponents.map((o) => ({
                           name: o.playerName,
                           games: o.gamesPlayed,
-                          winrate: o.winrate
+                          winrate: o.winrate,
                         }))}
                         layout="vertical"
                         margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
@@ -239,10 +251,13 @@ export const PlayerDashboardPage = () => {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis type="number" />
                         <YAxis dataKey="name" type="category" width={100} />
-                        <Tooltip 
+                        <Tooltip
                           formatter={(value, name) => {
                             if (name === 'games') {
-                              return [`${value} ${t('playerDetail.games')}`, t('playerDashboard.gamesLabel')];
+                              return [
+                                `${value} ${t('playerDetail.games')}`,
+                                t('playerDashboard.gamesLabel'),
+                              ];
                             }
                             if (name === 'winrate') {
                               return [`${value}%`, t('playerDashboard.winrateLabel')];
@@ -254,11 +269,14 @@ export const PlayerDashboardPage = () => {
                       </BarChart>
                     </ResponsiveContainer>
                     <div className="mt-4 text-sm text-gray-600">
-                      {opponents.map(o => (
+                      {opponents.map((o) => (
                         <div key={o.playerId} className="flex justify-between">
                           <span>{o.playerName}</span>
                           <span className="font-medium">
-                            {t('playerDashboard.statsSummary', { count: o.gamesPlayed, winrate: o.winrate })}
+                            {t('playerDashboard.statsSummary', {
+                              count: o.gamesPlayed,
+                              winrate: o.winrate,
+                            })}
                           </span>
                         </div>
                       ))}
@@ -270,9 +288,11 @@ export const PlayerDashboardPage = () => {
 
             {/* Global Ranking Section */}
             <div className="mt-12">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">{t('playerDashboard.globalRanking')}</h2>
-              <GlobalRankingTable 
-                stats={allStats} 
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                {t('playerDashboard.globalRanking')}
+              </h2>
+              <GlobalRankingTable
+                stats={allStats}
                 isLoading={rankingLoading}
                 nicknameMap={nicknameMap}
               />
@@ -280,9 +300,7 @@ export const PlayerDashboardPage = () => {
           </div>
         ) : (
           <div className="bg-white p-8 rounded-lg shadow text-center">
-            <p className="text-gray-600 text-lg">
-              {t('playerDashboard.noStats')}
-            </p>
+            <p className="text-gray-600 text-lg">{t('playerDashboard.noStats')}</p>
           </div>
         )}
       </div>

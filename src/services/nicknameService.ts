@@ -29,7 +29,7 @@ export const nicknameService = {
     for (const player of allPlayers) {
       if (player.type === 'active' && player.nickname) {
         state.used.set(player.id, player.nickname);
-        state.available = state.available.filter(n => n !== player.nickname);
+        state.available = state.available.filter((n) => n !== player.nickname);
       }
     }
   },

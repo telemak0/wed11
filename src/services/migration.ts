@@ -16,7 +16,7 @@ export const migratePlayersAddCodes = async (): Promise<{
   total: number;
 }> => {
   console.log('Starting player code migration...');
-  
+
   try {
     const snapshot = await getDocs(collection(db, PLAYERS_COLLECTION));
     let migrated = 0;
@@ -79,20 +79,26 @@ export const migratePlayersAddNicknames = async (): Promise<{
           console.log(`Migrated player ${player.id} (${player.name}) with nickname: ${nickname}`);
           migrated++;
         } else {
-          console.warn(`Failed to assign nickname to player ${player.id} (${player.name}) - pool exhausted`);
+          console.warn(
+            `Failed to assign nickname to player ${player.id} (${player.name}) - pool exhausted`
+          );
           skipped++;
         }
       } else if (player.type === 'occasional') {
         console.log(`Skipped occasional player ${player.id} (${player.name})`);
         skipped++;
       } else {
-        console.log(`Skipped player ${player.id} (${player.name}) - already has nickname: ${player.nickname}`);
+        console.log(
+          `Skipped player ${player.id} (${player.name}) - already has nickname: ${player.nickname}`
+        );
         skipped++;
       }
     }
 
     const total = players.length;
-    console.log(`Nickname migration complete: ${migrated} migrated, ${skipped} skipped, ${total} total`);
+    console.log(
+      `Nickname migration complete: ${migrated} migrated, ${skipped} skipped, ${total} total`
+    );
 
     return { migrated, skipped, total };
   } catch (error) {

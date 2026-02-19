@@ -26,11 +26,11 @@ export const PlayerStatsPage = () => {
     try {
       const [data, allPlayers] = await Promise.all([
         playerStatsService.getPlayerStats(showOccasional),
-        playerService.getPlayers()
+        playerService.getPlayers(),
       ]);
-      
+
       setStats(data);
-      
+
       const nickMap = new Map<string, string>();
       for (const player of allPlayers) {
         if (player.nickname) {
@@ -64,11 +64,9 @@ export const PlayerStatsPage = () => {
 
       // Use displayed name for sorting if sorting by player
       if (sortColumn === 'playerId' || sortColumn === 'playerName') {
-        const aName = showNicknames ? (nicknameMap.get(a.playerId) || a.playerName) : a.playerName;
-        const bName = showNicknames ? (nicknameMap.get(b.playerId) || b.playerName) : b.playerName;
-        return sortDirection === 'asc' 
-          ? aName.localeCompare(bName) 
-          : bName.localeCompare(aName);
+        const aName = showNicknames ? nicknameMap.get(a.playerId) || a.playerName : a.playerName;
+        const bName = showNicknames ? nicknameMap.get(b.playerId) || b.playerName : b.playerName;
+        return sortDirection === 'asc' ? aName.localeCompare(bName) : bName.localeCompare(aName);
       }
 
       // Handle numeric comparisons
@@ -82,7 +80,9 @@ export const PlayerStatsPage = () => {
   };
 
   const SortIndicator: React.FC<{ column: keyof PlayerStats }> = ({ column }) => {
-    if (sortColumn !== column) {return <span className="text-gray-300 ml-1">↕</span>;}
+    if (sortColumn !== column) {
+      return <span className="text-gray-300 ml-1">↕</span>;
+    }
     return <span className="text-indigo-600 ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>;
   };
 
@@ -138,66 +138,85 @@ export const PlayerStatsPage = () => {
               onChange={(e) => setShowNicknames(e.target.checked)}
               className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
-            <span className="ml-3 text-gray-700 font-medium">
-              {t('playerStats.showNicknames')}
-            </span>
+            <span className="ml-3 text-gray-700 font-medium">{t('playerStats.showNicknames')}</span>
           </label>
         </div>
 
         {/* Table */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {sortedStats.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              {t('playerStats.noStats')}
-            </div>
+            <div className="p-8 text-center text-gray-500">{t('playerStats.noStats')}</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-100 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('playerName')}>
+                    <th
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('playerName')}
+                    >
                       {t('playerStats.playerName')} <SortIndicator column="playerName" />
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('matchesPlayed')}>
+                    <th
+                      className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('matchesPlayed')}
+                    >
                       {t('playerStats.matches')} <SortIndicator column="matchesPlayed" />
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('totalPoints')}>
+                    <th
+                      className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('totalPoints')}
+                    >
                       {t('playerStats.totalPoints')} <SortIndicator column="totalPoints" />
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('wins')}>
+                    <th
+                      className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('wins')}
+                    >
                       {t('playerStats.wins')} <SortIndicator column="wins" />
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('draws')}>
+                    <th
+                      className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('draws')}
+                    >
                       {t('playerStats.draws')} <SortIndicator column="draws" />
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('losses')}>
+                    <th
+                      className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('losses')}
+                    >
                       {t('playerStats.losses')} <SortIndicator column="losses" />
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('totalGoalsScored')}>
+                    <th
+                      className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('totalGoalsScored')}
+                    >
                       {t('playerStats.goalsFor')} <SortIndicator column="totalGoalsScored" />
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('totalGoalsConceded')}>
+                    <th
+                      className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('totalGoalsConceded')}
+                    >
                       {t('playerStats.goalsAgainst')} <SortIndicator column="totalGoalsConceded" />
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('pointsPerGame')}>
+                    <th
+                      className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('pointsPerGame')}
+                    >
                       {t('playerStats.pointsPerGame')} <SortIndicator column="pointsPerGame" />
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('goalsPerGame')}>
+                    <th
+                      className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('goalsPerGame')}
+                    >
                       {t('playerStats.goalsForPerGame')} <SortIndicator column="goalsPerGame" />
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
-                        onClick={() => handleSort('goalsAgainstPerGame')}>
-                      {t('playerStats.goalsAgainstPerGame')} <SortIndicator column="goalsAgainstPerGame" />
+                    <th
+                      className="px-6 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-150"
+                      onClick={() => handleSort('goalsAgainstPerGame')}
+                    >
+                      {t('playerStats.goalsAgainstPerGame')}{' '}
+                      <SortIndicator column="goalsAgainstPerGame" />
                     </th>
                   </tr>
                 </thead>
@@ -209,7 +228,9 @@ export const PlayerStatsPage = () => {
                           to={`/admin/player-stats/${stat.playerId}`}
                           className="text-indigo-600 hover:text-indigo-800 hover:underline"
                         >
-                          {showNicknames ? (nicknameMap.get(stat.playerId) || stat.playerName) : stat.playerName}
+                          {showNicknames
+                            ? nicknameMap.get(stat.playerId) || stat.playerName
+                            : stat.playerName}
                         </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-600">
@@ -252,7 +273,10 @@ export const PlayerStatsPage = () => {
 
         {/* Footer info */}
         <div className="mt-6 text-sm text-gray-600 text-center">
-          {t('playerStats.footer', { count: sortedStats.length, players: sortedStats.length !== 1 ? t('playerStats.players') : t('playerStats.player') })}
+          {t('playerStats.footer', {
+            count: sortedStats.length,
+            players: sortedStats.length !== 1 ? t('playerStats.players') : t('playerStats.player'),
+          })}
         </div>
       </div>
     </div>

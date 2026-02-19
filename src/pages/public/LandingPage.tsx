@@ -15,25 +15,29 @@ export const LandingPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-      const load = async () => {
-          try {
-              const [m, players] = await Promise.all([
-                  matchService.getScheduledMatch(),
-                  playerService.getPlayers()
-              ]);
-              
-              if (m) {
-                  setMatch(m);
-                  setTeamRed(m.teamRed.map(id => players.find(p => p.id === id)).filter(Boolean) as Player[]);
-                  setTeamWhite(m.teamWhite.map(id => players.find(p => p.id === id)).filter(Boolean) as Player[]);
-              }
-          } catch (e) {
-              console.error(e);
-          } finally {
-              setLoading(false);
-          }
-      };
-      load();
+    const load = async () => {
+      try {
+        const [m, players] = await Promise.all([
+          matchService.getScheduledMatch(),
+          playerService.getPlayers(),
+        ]);
+
+        if (m) {
+          setMatch(m);
+          setTeamRed(
+            m.teamRed.map((id) => players.find((p) => p.id === id)).filter(Boolean) as Player[]
+          );
+          setTeamWhite(
+            m.teamWhite.map((id) => players.find((p) => p.id === id)).filter(Boolean) as Player[]
+          );
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
   }, []);
 
   return (
@@ -54,28 +58,28 @@ export const LandingPage = () => {
 
         <div className="flex flex-col items-center">
           {loading ? (
-              <div className="text-gray-500">{t('landing.loading')}</div>
+            <div className="text-gray-500">{t('landing.loading')}</div>
           ) : match ? (
-              <div className="w-full">
-                <div className="bg-white rounded-xl shadow-2xl p-6 overflow-hidden">
-                    <div className="text-center mb-6">
-                        <h2 className="text-2xl font-bold text-gray-800">{t('landing.scheduledMatch')}</h2>
-                        <p className="text-gray-500">{match.date.toDate().toLocaleDateString()}</p>
-                    </div>
-                    <div className="bg-gray-900 p-4 rounded-xl">
-                        <h3 className="text-center text-white text-lg font-bold mb-4 uppercase tracking-widest">{t('landing.fieldView')}</h3>
-                        <PitchView 
-                            teamRed={teamRed} 
-                            teamWhite={teamWhite} 
-                            interactive={false}
-                        />
-                    </div>
+            <div className="w-full">
+              <div className="bg-white rounded-xl shadow-2xl p-6 overflow-hidden">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    {t('landing.scheduledMatch')}
+                  </h2>
+                  <p className="text-gray-500">{match.date.toDate().toLocaleDateString()}</p>
+                </div>
+                <div className="bg-gray-900 p-4 rounded-xl">
+                  <h3 className="text-center text-white text-lg font-bold mb-4 uppercase tracking-widest">
+                    {t('landing.fieldView')}
+                  </h3>
+                  <PitchView teamRed={teamRed} teamWhite={teamWhite} interactive={false} />
                 </div>
               </div>
+            </div>
           ) : (
-              <div className="text-center text-gray-500 mt-12">
-                  <p>{t('landing.noUpcomingMatches')}</p>
-              </div>
+            <div className="text-center text-gray-500 mt-12">
+              <p>{t('landing.noUpcomingMatches')}</p>
+            </div>
           )}
         </div>
       </div>

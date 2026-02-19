@@ -23,9 +23,9 @@ export const playerStatsService = {
     const q = query(collection(db, PLAYER_STATS_COLLECTION), orderBy('lastUpdated', 'desc'));
     const snapshot = await getDocs(q);
     const allPlayers = await playerService.getPlayers();
-    const playerMap = new Map(allPlayers.map(p => [p.id, p]));
-    
-    let stats = snapshot.docs.map(doc => {
+    const playerMap = new Map(allPlayers.map((p) => [p.id, p]));
+
+    let stats = snapshot.docs.map((doc) => {
       const player = playerMap.get(doc.id);
       const data = doc.data();
       return {
@@ -41,14 +41,14 @@ export const playerStatsService = {
         pointsPerGame: data.pointsPerGame ?? 0,
         goalsPerGame: data.goalsPerGame ?? 0,
         goalsAgainstPerGame: data.goalsAgainstPerGame ?? 0,
-        lastUpdated: data.lastUpdated
+        lastUpdated: data.lastUpdated,
       } as PlayerStats;
     });
 
     // Filter by player type if needed
     if (!includeOccasional) {
-      const activePlayers = new Set(allPlayers.filter(p => p.type === 'active').map(p => p.id));
-      stats = stats.filter(s => activePlayers.has(s.playerId));
+      const activePlayers = new Set(allPlayers.filter((p) => p.type === 'active').map((p) => p.id));
+      stats = stats.filter((s) => activePlayers.has(s.playerId));
     }
 
     return stats;
@@ -59,10 +59,10 @@ export const playerStatsService = {
    */
   async calculateStatsForPlayer(playerId: string): Promise<PlayerStats> {
     const allMatches = await matchService.getAllMatches();
-    
+
     // Filter completed matches where player participated
     const playerMatches = allMatches.filter(
-      match => 
+      (match) =>
         match.status === 'completed' &&
         (match.teamWhite.includes(playerId) || match.teamRed.includes(playerId))
     );
@@ -76,7 +76,9 @@ export const playerStatsService = {
     let totalGoalsConceded = 0;
 
     for (const match of playerMatches) {
-      if (!match.result) {continue;} // Skip if no result recorded
+      if (!match.result) {
+        continue;
+      } // Skip if no result recorded
 
       matchesPlayed += 1;
       const { goalsWhite, goalsRed } = match.result;
@@ -149,7 +151,7 @@ export const playerStatsService = {
    */
   async recalculateAllStats(): Promise<void> {
     const allPlayers = await playerService.getPlayers();
-    
+
     for (const player of allPlayers) {
       await playerStatsService.updatePlayerStats(player.id);
     }

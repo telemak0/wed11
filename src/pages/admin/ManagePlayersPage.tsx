@@ -37,7 +37,9 @@ export const ManagePlayersPage = () => {
 
   const handleCreatePlayer = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newPlayerName.trim()) {return;}
+    if (!newPlayerName.trim()) {
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -50,7 +52,7 @@ export const ManagePlayersPage = () => {
         inputRef.current?.focus();
       }, 0);
     } catch (err) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setError(t('managePlayers.failedToCreate') + ': ' + (err as any).message);
     } finally {
       setSubmitting(false);
@@ -63,11 +65,13 @@ export const ManagePlayersPage = () => {
   };
 
   const handleSaveEdit = async (name: string, type: 'active' | 'occasional') => {
-    if (!editingPlayer) {return;}
+    if (!editingPlayer) {
+      return;
+    }
 
     try {
       await playerService.updatePlayer(editingPlayer.id, name, type);
-      setPlayers(players.map(p => p.id === editingPlayer.id ? { ...p, name, type } : p));
+      setPlayers(players.map((p) => (p.id === editingPlayer.id ? { ...p, name, type } : p)));
       setEditModalOpen(false);
       setEditingPlayer(null);
     } catch (e) {
@@ -77,18 +81,22 @@ export const ManagePlayersPage = () => {
   };
 
   const handleDeletePlayer = async (id: string, name: string) => {
-    if (!window.confirm(t('managePlayers.deleteConfirm', { name }))) {return;}
+    if (!window.confirm(t('managePlayers.deleteConfirm', { name }))) {
+      return;
+    }
 
     try {
       await playerService.deletePlayer(id);
-      setPlayers(players.filter(p => p.id !== id));
+      setPlayers(players.filter((p) => p.id !== id));
     } catch (err) {
       console.error(err);
       alert(t('managePlayers.failedToDelete'));
     }
   };
 
-  if (loading) {return <div className="p-8 text-center">{t('managePlayers.loading')}</div>;}
+  if (loading) {
+    return <div className="p-8 text-center">{t('managePlayers.loading')}</div>;
+  }
 
   return (
     <div>
@@ -107,10 +115,14 @@ export const ManagePlayersPage = () => {
 
       {/* Create Player Form */}
       <div className="bg-white shadow rounded-lg p-6 mb-8">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">{t('managePlayers.addNewPlayer')}</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">
+          {t('managePlayers.addNewPlayer')}
+        </h3>
         <form onSubmit={handleCreatePlayer} className="flex gap-4">
           <div className="flex-1">
-            <label htmlFor="playerName" className="sr-only">{t('managePlayers.playerNameLabel')}</label>
+            <label htmlFor="playerName" className="sr-only">
+              {t('managePlayers.playerNameLabel')}
+            </label>
             <input
               ref={inputRef}
               id="playerName"
@@ -123,7 +135,9 @@ export const ManagePlayersPage = () => {
             />
           </div>
           <div>
-            <label htmlFor="playerType" className="sr-only">{t('managePlayers.playerTypeLabel')}</label>
+            <label htmlFor="playerType" className="sr-only">
+              {t('managePlayers.playerTypeLabel')}
+            </label>
             <select
               id="playerType"
               className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
@@ -149,71 +163,89 @@ export const ManagePlayersPage = () => {
       <div className="bg-white shadow overflow-hidden sm:rounded-md">
         {/* Active Players */}
         <div className="px-4 py-4 sm:px-6 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">{t('managePlayers.activePlayersHeading')}</h3>
+          <h3 className="text-lg font-medium text-gray-900">
+            {t('managePlayers.activePlayersHeading')}
+          </h3>
         </div>
         <ul role="list" className="divide-y divide-gray-200">
-          {players.filter(p => p.type === 'active').length === 0 ? (
+          {players.filter((p) => p.type === 'active').length === 0 ? (
             <li className="px-4 py-4 sm:px-6 text-gray-500 text-center">
               {t('managePlayers.noActivePlayers')}
             </li>
           ) : (
-            players.filter(p => p.type === 'active').map((player) => (
-              <li key={player.id} className="flex items-center justify-between px-4 py-4 sm:px-6 hover:bg-gray-50">
-                <div className="flex-1">
-                  <div className="text-sm font-medium text-indigo-600">{player.name}</div>
-                  <div className="text-xs text-gray-500 font-mono">{t('managePlayers.codePrefix')} {player.loginCode}</div>
-                </div>
-                <div className="flex space-x-4">
-                  <button
-                    onClick={() => handleEditPlayer(player)}
-                    className="text-indigo-600 hover:text-indigo-900 text-sm font-semibold"
-                  >
-                    {t('managePlayers.editBtn')}
-                  </button>
-                  <button
-                    onClick={() => handleDeletePlayer(player.id, player.name)}
-                    className="text-red-600 hover:text-red-900 text-sm font-semibold"
-                  >
-                    {t('managePlayers.deleteBtn')}
-                  </button>
-                </div>
-              </li>
-            ))
+            players
+              .filter((p) => p.type === 'active')
+              .map((player) => (
+                <li
+                  key={player.id}
+                  className="flex items-center justify-between px-4 py-4 sm:px-6 hover:bg-gray-50"
+                >
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-indigo-600">{player.name}</div>
+                    <div className="text-xs text-gray-500 font-mono">
+                      {t('managePlayers.codePrefix')} {player.loginCode}
+                    </div>
+                  </div>
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={() => handleEditPlayer(player)}
+                      className="text-indigo-600 hover:text-indigo-900 text-sm font-semibold"
+                    >
+                      {t('managePlayers.editBtn')}
+                    </button>
+                    <button
+                      onClick={() => handleDeletePlayer(player.id, player.name)}
+                      className="text-red-600 hover:text-red-900 text-sm font-semibold"
+                    >
+                      {t('managePlayers.deleteBtn')}
+                    </button>
+                  </div>
+                </li>
+              ))
           )}
         </ul>
 
         {/* Occasional Players */}
         <div className="px-4 py-4 sm:px-6 border-b border-gray-200 border-t">
-          <h3 className="text-lg font-medium text-gray-900">{t('managePlayers.occasionalPlayersHeading')}</h3>
+          <h3 className="text-lg font-medium text-gray-900">
+            {t('managePlayers.occasionalPlayersHeading')}
+          </h3>
         </div>
         <ul role="list" className="divide-y divide-gray-200">
-          {players.filter(p => p.type === 'occasional').length === 0 ? (
+          {players.filter((p) => p.type === 'occasional').length === 0 ? (
             <li className="px-4 py-4 sm:px-6 text-gray-500 text-center">
               {t('managePlayers.noOccasionalPlayers')}
             </li>
           ) : (
-            players.filter(p => p.type === 'occasional').map((player) => (
-              <li key={player.id} className="flex items-center justify-between px-4 py-4 sm:px-6 hover:bg-gray-50">
-                <div className="flex-1">
-                  <div className="text-sm font-medium text-indigo-600">{player.name}</div>
-                  <div className="text-xs text-gray-500 font-mono">{t('managePlayers.codePrefix')} {player.loginCode}</div>
-                </div>
-                <div className="flex space-x-4">
-                  <button
-                    onClick={() => handleEditPlayer(player)}
-                    className="text-indigo-600 hover:text-indigo-900 text-sm font-semibold"
-                  >
-                    {t('managePlayers.editBtn')}
-                  </button>
-                  <button
-                    onClick={() => handleDeletePlayer(player.id, player.name)}
-                    className="text-red-600 hover:text-red-900 text-sm font-semibold"
-                  >
-                    {t('managePlayers.deleteBtn')}
-                  </button>
-                </div>
-              </li>
-            ))
+            players
+              .filter((p) => p.type === 'occasional')
+              .map((player) => (
+                <li
+                  key={player.id}
+                  className="flex items-center justify-between px-4 py-4 sm:px-6 hover:bg-gray-50"
+                >
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-indigo-600">{player.name}</div>
+                    <div className="text-xs text-gray-500 font-mono">
+                      {t('managePlayers.codePrefix')} {player.loginCode}
+                    </div>
+                  </div>
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={() => handleEditPlayer(player)}
+                      className="text-indigo-600 hover:text-indigo-900 text-sm font-semibold"
+                    >
+                      {t('managePlayers.editBtn')}
+                    </button>
+                    <button
+                      onClick={() => handleDeletePlayer(player.id, player.name)}
+                      className="text-red-600 hover:text-red-900 text-sm font-semibold"
+                    >
+                      {t('managePlayers.deleteBtn')}
+                    </button>
+                  </div>
+                </li>
+              ))
           )}
         </ul>
       </div>

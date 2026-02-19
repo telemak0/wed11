@@ -12,14 +12,14 @@ interface PlayerEditModalProps {
   initialLoginCode?: string;
 }
 
-export const PlayerEditModal = ({ 
-  isOpen, 
-  onClose, 
-  onSave, 
-  initialName, 
+export const PlayerEditModal = ({
+  isOpen,
+  onClose,
+  onSave,
+  initialName,
   initialType,
   playerId,
-  initialLoginCode = ''
+  initialLoginCode = '',
 }: PlayerEditModalProps) => {
   const { t } = useTranslation();
   const [name, setName] = useState(initialName);
@@ -38,7 +38,9 @@ export const PlayerEditModal = ({
     }
   }, [isOpen, initialName, initialType, initialLoginCode]);
 
-  if (!isOpen) {return null;}
+  if (!isOpen) {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +57,7 @@ export const PlayerEditModal = ({
 
   const handleRegenerateCode = async () => {
     if (!playerId) return;
-    
+
     setRegeneratingCode(true);
     try {
       const newCode = await playerService.updatePlayerCode(playerId);
@@ -69,7 +71,7 @@ export const PlayerEditModal = ({
 
   const handleCopyCode = async () => {
     if (!loginCode) return;
-    
+
     try {
       await navigator.clipboard.writeText(loginCode);
       setCodeCopied(true);
@@ -85,20 +87,24 @@ export const PlayerEditModal = ({
         <h2 className="text-xl font-bold mb-4 text-center">{t('playerEditModal.title')}</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">{t('playerEditModal.playerName')}</label>
-            <input 
-              type="text" 
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t('playerEditModal.playerName')}
+            </label>
+            <input
+              type="text"
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               className="w-full border rounded-lg py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">{t('playerEditModal.playerType')}</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t('playerEditModal.playerType')}
+            </label>
             <select
               value={type}
-              onChange={e => setType(e.target.value as 'active' | 'occasional')}
+              onChange={(e) => setType(e.target.value as 'active' | 'occasional')}
               className="w-full border rounded-lg py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="active">{t('managePlayers.typeActive')}</option>
@@ -107,7 +113,9 @@ export const PlayerEditModal = ({
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">{t('playerEditModal.loginCode')}</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t('playerEditModal.loginCode')}
+            </label>
             <div className="flex gap-2">
               <div className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 text-gray-700 font-mono text-lg text-center">
                 {loginCode || t('playerEditModal.notSet')}
@@ -118,7 +126,9 @@ export const PlayerEditModal = ({
                 disabled={regeneratingCode || saving || !playerId}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 whitespace-nowrap"
               >
-                {regeneratingCode ? t('playerEditModal.regenerating') : t('playerEditModal.regenerate')}
+                {regeneratingCode
+                  ? t('playerEditModal.regenerating')
+                  : t('playerEditModal.regenerate')}
               </button>
               <button
                 type="button"
@@ -129,22 +139,20 @@ export const PlayerEditModal = ({
                 {codeCopied ? t('playerEditModal.copied') : t('playerEditModal.copy')}
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
-              {t('playerEditModal.shareCode')}
-            </p>
+            <p className="text-xs text-gray-500 mt-2">{t('playerEditModal.shareCode')}</p>
           </div>
-          
+
           <div className="flex justify-end space-x-3">
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={onClose}
               disabled={saving}
               className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50"
             >
               {t('playerEditModal.cancel')}
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={saving || !name.trim()}
               className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
             >

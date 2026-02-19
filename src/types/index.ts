@@ -13,7 +13,7 @@ export interface Match {
   id: string;
   date: Timestamp;
   status: 'scheduled' | 'completed';
-  teamWhite: string[]; 
+  teamWhite: string[];
   teamRed: string[];
   result?: {
     goalsWhite: number;

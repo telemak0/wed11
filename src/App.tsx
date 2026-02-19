@@ -19,9 +19,9 @@ import { ProtectedPlayerRoute } from './components/route/ProtectedPlayerRoute';
 import { migratePlayersAddNicknames } from './services/migration';
 
 const LoginRoute = () => {
-    const { isAuthenticated } = useAuth();
-    return isAuthenticated ? <Navigate to="/admin/dashboard" /> : <LoginPage />;
-}
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <Navigate to="/admin/dashboard" /> : <LoginPage />;
+};
 
 function App() {
   useEffect(() => {
@@ -47,16 +47,16 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              
+
               <Route path="/admin" element={<LoginRoute />} />
-              
+
               <Route element={<AdminLayout />}>
-                 <Route path="/admin/dashboard" element={<DashboardPage />} />
-                 <Route path="/admin/players" element={<ManagePlayersPage />} />
-                 <Route path="/admin/next-lineup" element={<NextLineupPage />} />
-                 <Route path="/admin/history" element={<MatchHistoryPage />} />
-                 <Route path="/admin/player-stats" element={<PlayerStatsPage />} />
-                 <Route path="/admin/player-stats/:playerId" element={<PlayerDetailPage />} />
+                <Route path="/admin/dashboard" element={<DashboardPage />} />
+                <Route path="/admin/players" element={<ManagePlayersPage />} />
+                <Route path="/admin/next-lineup" element={<NextLineupPage />} />
+                <Route path="/admin/history" element={<MatchHistoryPage />} />
+                <Route path="/admin/player-stats" element={<PlayerStatsPage />} />
+                <Route path="/admin/player-stats/:playerId" element={<PlayerDetailPage />} />
               </Route>
 
               <Route path="/player-login" element={<PlayerLoginPage />} />

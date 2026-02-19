@@ -10,18 +10,16 @@ const resources = {
 };
 
 // Initialize i18next
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: 'es', // Default language is Spanish
-    fallbackLng: 'es', // Fallback to Spanish if key not found
-    interpolation: {
-      escapeValue: false, // React already escapes values
-    },
-    ns: ['translation'],
-    defaultNS: 'translation',
-    showSupportNotice: false // Disable i18next support notice in console
-  });
+i18n.use(initReactI18next).init({
+  resources,
+  lng: 'es', // Default language is Spanish
+  fallbackLng: 'es', // Fallback to Spanish if key not found
+  interpolation: {
+    escapeValue: false, // React already escapes values
+  },
+  ns: ['translation'],
+  defaultNS: 'translation',
+  showSupportNotice: false, // Disable i18next support notice in console
+});
 
 export default i18n;
