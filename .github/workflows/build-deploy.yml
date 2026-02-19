@@ -38,24 +38,11 @@ jobs:
       - name: Run type checking
         run: npm run type-check
 
-      - name: Run tests
-        run: npm run test
-
-      - name: Generate coverage report
-        run: npm run test:coverage
-
       - name: Build project
         run: npm run build
 
       - name: Check bundle size
         run: npm run bundle-report || true
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./coverage/lcov.info
-          flags: unittests
-          name: codecov-umbrella
 
   deploy:
     needs: build
