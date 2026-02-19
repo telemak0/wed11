@@ -1,0 +1,23 @@
+# Build outputs
+dist/
+build/
+out/
+.next/
+coverage/
+
+# Dependencies
+node_modules/
+
+# Generated files
+*.min.js
+*.config.js.backup
+
+# Test files (optional - some lint entire test directory)
+# tests/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env*

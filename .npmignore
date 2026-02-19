@@ -1,0 +1,34 @@
+# Development
+src/
+tests/
+specs/
+.github/
+.specify/
+.serena/
+
+# Configuration
+tsconfig.json
+vite.config.ts
+vitest.config.ts
+.eslintrc.*
+.prettierrc*
+jest.config.js
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Testing
+coverage/
+*.test.ts
+*.spec.ts
+
+# Build artifacts
+.tsbuildinfo
+dist-types/
+
+# Temp
+.env*
+.git/
+node_modules/
