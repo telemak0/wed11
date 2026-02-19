@@ -1,6 +1,6 @@
 import { I18nextProvider } from 'react-i18next';
 import i18n from './config/i18n';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { PlayerAuthProvider } from './context/PlayerAuthContext';
@@ -44,7 +44,7 @@ function App() {
     <I18nextProvider i18n={i18n}>
       <AuthProvider>
         <PlayerAuthProvider>
-          <BrowserRouter basename={import.meta.env.VITE_BASE_URL}>
+          <HashRouter>
             <Routes>
               <Route path="/" element={<LandingPage />} />
 
@@ -69,7 +69,7 @@ function App() {
                 }
               />
             </Routes>
-          </BrowserRouter>
+          </HashRouter>
         </PlayerAuthProvider>
       </AuthProvider>
     </I18nextProvider>
