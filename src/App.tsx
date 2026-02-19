@@ -44,7 +44,7 @@ function App() {
     <I18nextProvider i18n={i18n}>
       <AuthProvider>
         <PlayerAuthProvider>
-          <BrowserRouter>
+          <BrowserRouter basename={import.meta.env.VITE_BASE_URL}>
             <Routes>
               <Route path="/" element={<LandingPage />} />
 
